@@ -20,8 +20,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<wsdl.directory>${basedir}/../station-ws/src/main/resources</wsdl.directory>
-		<!--  changed -->
-		<wsdl.filename>station.1_0.wsdl</wsdl.filename>
+		<wsdl.filename>station.2_0.wsdl</wsdl.filename>
 
 		<mainclass>org.binas.station.ws.cli.StationClientApp</mainclass>
 
@@ -40,23 +39,25 @@
 	</properties>
 
 	<dependencies>
+		<!-- JAX-WS -->
 		<dependency>
 			<groupId>com.sun.xml.ws</groupId>
 			<artifactId>jaxws-rt</artifactId>
 			<version>2.2.10</version>
 		</dependency>
+		<!-- UDDI Naming -->
+		<dependency>
+			<groupId>pt.ulisboa.tecnico.sdis</groupId>
+			<artifactId>uddi-naming</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<!-- JUnit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- UDDI Naming -->
-	    <dependency>
-	        <groupId>pt.ulisboa.tecnico.sdis</groupId>
-	        <artifactId>uddi-naming</artifactId>
-	        <version>1.2</version>
-	    </dependency>
 	</dependencies>
 
 	<build>
@@ -83,12 +84,32 @@
 					</nonFilteredFileExtensions>
 				</configuration>
 			</plugin>
-			<plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>jaxws-maven-plugin</artifactId> 
-				<version>2.4.1</version> <executions> <execution> <goals> <goal>wsimport</goal> 
-				</goals> </execution> </executions> <configuration> <wsdlDirectory>${wsdl.directory}</wsdlDirectory> 
-				<wsdlFiles> <wsdlFile>${wsdl.filename}</wsdlFile> </wsdlFiles> </configuration> 
-				<dependencies> <dependency> <groupId>com.sun.xml.ws</groupId> <artifactId>jaxws-tools</artifactId> 
-				<version>2.2.10</version> </dependency> </dependencies> </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.4.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- http://www.mojohaus.org/jaxws-maven-plugin/wsimport-mojo.html -->
+					<wsdlDirectory>${wsdl.directory}</wsdlDirectory>
+					<wsdlFiles>
+						<wsdlFile>${wsdl.filename}</wsdlFile>
+					</wsdlFiles>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.sun.xml.ws</groupId>
+						<artifactId>jaxws-tools</artifactId>
+						<version>2.2.10</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.19.1</version>
@@ -117,8 +138,8 @@
 					<killAfter>-1</killAfter>
 					<mainClass>${mainclass}</mainClass>
 					<arguments>
-						<!--<argument>${uddi.url}</argument>-->
-						<argument>${ws.url}</argument>
+						<argument>${uddi.url}</argument>
+						<argument>${ws.name}</argument>
 					</arguments>
 				</configuration>
 			</plugin>

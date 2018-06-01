@@ -1,12 +1,20 @@
 package org.binas.station.domain;
 
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.binas.station.domain.exception.BadInitException;
 import org.binas.station.domain.exception.NoBinaAvailException;
 import org.binas.station.domain.exception.NoSlotAvailException;
+import org.binas.station.domain.exception.UserNotFoundException;
 
-/** Domain Root. */
+/**
+ * Station Client
+ *
+ * Station is defined by an ID, a set of Coordinates, capacity and retrieval bonus. 
+ *
+ */
 public class Station {
 	
 	/** Creates and returns default coordinates. */
@@ -22,6 +30,9 @@ public class Station {
     private int maxCapacity;
 	/** Bonus for returning bike at this station. */
     private int bonus;
+
+
+	private ConcurrentHashMap<String, Balance> balancesMap = new ConcurrentHashMap<String, Balance>();
 
 	/**
 	 * Global counter of Binas Gets. Uses lock-free thread-safe single variable.
@@ -68,6 +79,7 @@ public class Station {
  		
 		totalGets.set(0);
 		totalReturns.set(0);
+		balancesMap = new ConcurrentHashMap<String, Balance>();
 	}
  	
  	public void setId(String id) {
@@ -131,5 +143,22 @@ public class Station {
     public synchronized int getAvailableBinas() {
     	return maxCapacity - freeDocks.get();
     }
+    
+    
+    public ConcurrentHashMap<String, Balance> getBalancesMap() {
+		return balancesMap;
+	}
+
+	public void setBalancesMap(ConcurrentHashMap<String, Balance> balancesMap) {
+		this.balancesMap = balancesMap;
+	}
+	
+	public Balance getUserFromMaps(String userEmail) throws UserNotFoundException {
+		Balance balance = balancesMap.get(userEmail);
+		if (balance == null) {
+			throw new UserNotFoundException();
+		}
+		return balance;
+	}
     	
 }

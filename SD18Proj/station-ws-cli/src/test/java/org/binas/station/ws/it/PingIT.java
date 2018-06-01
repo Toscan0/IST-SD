@@ -1,7 +1,8 @@
 package org.binas.station.ws.it;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
-import org.junit.Assert;
 
 /**
  * Class that tests Ping operation
@@ -15,16 +16,7 @@ public class PingIT extends BaseIT {
 
 	@Test
 	public void pingEmptyTest() {
-		Assert.assertNotNull(client.testPing("test"));
+		assertNotNull(client.testPing("test"));
 	}
-	
-	@Test
-	public void nullTest() {
-		Assert.assertNotNull(client.testPing(null));
-	}
-	
-	@Test
-	public void emptyStringTest() {
-		Assert.assertNotNull(client.testPing(""));
-	}
+
 }

@@ -36,6 +36,13 @@
                     <xs:element name="freeDocks" type="xs:int" />
                 </xs:sequence>
             </xs:complexType>
+            
+            <xs:complexType name="balanceView">
+                <xs:sequence>
+                    <xs:element name="balance" type="xs:int" />
+                    <xs:element name="tag" type="xs:int" />
+                </xs:sequence>
+            </xs:complexType>
 
             <xs:complexType name="getInfo">
                 <xs:sequence />
@@ -84,6 +91,14 @@
                 </xs:sequence>
             </xs:complexType>
             <xs:element name="NoSlotAvail" type="tns:NoSlotAvail" />
+
+            <xs:complexType name="UserNotFound">
+                <xs:sequence>
+                    <xs:element name="message" type="xs:string" minOccurs="0" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="UserNotFound" type="tns:UserNotFound" />
+
 
 
             <!-- test control operations data types -->
@@ -135,6 +150,36 @@
             </xs:complexType>
             <xs:element name="BadInit" type="tns:BadInit" />
 
+		    <xs:complexType name="setBalance">
+		    	<xs:sequence>
+                	<xs:element name="userEmail" type="xs:string" minOccurs="0" />
+                	<xs:element name="newBalance" type="xs:int" />
+                	<xs:element name="tag" type="xs:int" />
+           	 	</xs:sequence>
+            </xs:complexType>
+            <xs:element name="setBalance" type="tns:setBalance" />
+
+            <xs:complexType name="setBalanceResponse">
+                <xs:sequence>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="setBalanceResponse" type="tns:setBalanceResponse" />
+
+		    <xs:complexType name="getBalance">
+		    	<xs:sequence>
+                	<xs:element name="userEmail" type="xs:string" minOccurs="0" />
+           	 	</xs:sequence>
+            </xs:complexType>
+            <xs:element name="getBalance" type="tns:getBalance" />
+
+            <xs:complexType name="getBalanceResponse">
+                <xs:sequence>
+                 	<xs:element name="balanceInfo" type="tns:balanceView" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getBalanceResponse" type="tns:getBalanceResponse" />
+
+
         </xs:schema>
     </types>
 
@@ -168,6 +213,9 @@
     <message name="NoBinaAvail">
         <part name="fault" element="tns:NoBinaAvail" />
     </message>
+    <message name="UserNotFound">
+        <part name="fault" element="tns:UserNotFound" />
+    </message>
 
     <!-- test control messages -->
     <message name="test_ping">
@@ -194,6 +242,20 @@
     <message name="BadInit">
         <part name="fault" element="tns:BadInit"/>
     </message>
+    
+    <message name="setBalance">
+        <part name="parameters" element="tns:setBalance" />
+    </message>
+    <message name="setBalanceResponse">
+        <part name="parameters" element="tns:setBalanceResponse" />
+    </message>
+     
+    <message name="getBalance">
+        <part name="parameters" element="tns:getBalance" />
+    </message>
+    <message name="getBalanceResponse">
+        <part name="parameters" element="tns:getBalanceResponse" />
+    </message>   
 
 
     <!-- Port Type (Interface) -->
@@ -247,6 +309,23 @@
             <fault message="tns:BadInit" name="BadInit"
                 wsam:Action="http://ws.station.binas.org/Station/test_init/Fault/BadInit" />
         </operation>
+        
+        <operation name="setBalance">
+            <input wsam:Action="http://ws.station.binas.org/Station/setBalanceRequest"
+                message="tns:setBalance" />
+            <output wsam:Action="http://ws.station.binas.org/Station/setBalanceResponse"
+                message="tns:setBalanceResponse" />
+        </operation>
+        
+        <operation name="getBalance">
+            <input wsam:Action="http://ws.station.binas.org/Station/getBalanceRequest"
+                message="tns:getBalance" />
+            <output wsam:Action="http://ws.station.binas.org/Station/getBalanceResponse"
+                message="tns:getBalanceResponse" />
+            <fault message="tns:UserNotFound" name="UserNotFound"
+                wsam:Action="http://ws.station.binas.org/Station/getBalance/Fault/UserNotFound"/>
+        </operation>
+                
     </portType>
 
     <!-- SOAP/HTTP Binding -->
@@ -324,7 +403,27 @@
                 <soap:fault name="BadInit" use="literal" />
             </fault>
         </operation>
-
+        
+        <operation name="setBalance">
+            <soap:operation soapAction="" />
+            <input>
+                <soap:body use="literal" />
+            </input>
+            <output>
+                <soap:body use="literal" />
+            </output>
+        </operation>
+        
+        <operation name="getBalance">
+            <soap:operation soapAction="" />
+            <input>
+                <soap:body use="literal" />
+            </input>
+            <output>
+                <soap:body use="literal" />
+            </output>
+        </operation>
+        
     </binding>
 
     <!-- Service -->

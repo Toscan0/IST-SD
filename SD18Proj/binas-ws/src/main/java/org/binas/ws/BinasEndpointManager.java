@@ -1,14 +1,15 @@
- package org.binas.ws;
+package org.binas.ws;
 
 import java.io.IOException;
 
 import javax.xml.ws.Endpoint;
+
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
 
-/** The endpoint manager starts and registers the service. */
+/** End point manager */
 public class BinasEndpointManager {
 
-	/** UDDI naming sserver location */
+	/** UDDI naming server location */
 	private String uddiURL = null;
 	/** Web Service name */
 	private String wsName = null;
@@ -23,27 +24,23 @@ public class BinasEndpointManager {
 
 	/** Port implementation */
 	private BinasPortImpl portImpl = new BinasPortImpl(this);
-	//private BinasPortImpl portImpl = new BinasPortImpl();
 
-	
 	/** Obtain Port implementation */
 	public BinasPortType getPort() {
 		return portImpl;
 	}
 
-	/** Web Service end point */
+	/** Web Service endpoint */
 	private Endpoint endpoint = null;
+	/** UDDI Naming instance for contacting UDDI server */
+	private UDDINaming uddiNaming = null;
 
-	 /** UDDI Naming instance for contacting UDDI server */
-	 private UDDINaming uddiNaming = null;
-	
 	/** Get UDDI Naming instance for contacting UDDI server */
-	//private
-	 UDDINaming getUddiNaming() {
+	UDDINaming getUddiNaming() {
 		return uddiNaming;
 	}
 
-	/** output option */
+	/** output option **/
 	private boolean verbose = true;
 
 	public boolean isVerbose() {
@@ -59,12 +56,12 @@ public class BinasEndpointManager {
 		this.uddiURL = uddiURL;
 		this.wsName = wsName;
 		this.wsURL = wsURL;
-
 	}
 
 	/** constructor with provided web service URL */
-	public BinasEndpointManager(String wsName, String wsURL) {
-		this.wsName = wsName;
+	public BinasEndpointManager(String wsURL) {
+		if (wsURL == null)
+			throw new NullPointerException("Web Service URL cannot be null!");
 		this.wsURL = wsURL;
 	}
 
@@ -120,31 +117,42 @@ public class BinasEndpointManager {
 		this.portImpl = null;
 		unpublishFromUDDI();
 	}
-	
+
 	/* UDDI */
 
 	void publishToUDDI() throws Exception {
-		// TODO
-		if(wsName!=null && uddiURL!=null){
+		try {
 			// publish to UDDI
-			if(verbose){
-				System.out.printf("Publishing '%s' to UDDI at %s%n", wsName, uddiURL);
+			if (uddiURL != null) {
+				if (verbose) {
+					System.out.printf("Publishing '%s' to UDDI at %s%n", wsName, uddiURL);
+				}
+				uddiNaming = new UDDINaming(uddiURL);
+				uddiNaming.rebind(wsName, wsURL);
 			}
-			uddiNaming = new UDDINaming(uddiURL);
-			uddiNaming.rebind(wsName, wsURL);
+		} catch (Exception e) {
+			uddiNaming = null;
+			if (verbose) {
+				System.out.printf("Caught exception when binding to UDDI: %s%n", e);
+			}
+			throw e;
 		}
 	}
 
 	void unpublishFromUDDI() {
-		// TODO
 		try {
-			if (uddiNaming != null && wsName!=null) {
+			if (uddiNaming != null) {
 				// delete from UDDI
 				uddiNaming.unbind(wsName);
-				System.out.printf("Deleted '%s' from UDDI%n", wsName);
+				if (verbose) {
+					System.out.printf("Unpublished '%s' from UDDI%n", wsName);
+				}
+				uddiNaming = null;
 			}
 		} catch (Exception e) {
-			System.out.printf("Caught exception when deleting: %s%n", e);
+			if (verbose) {
+				System.out.printf("Caught exception when unbinding: %s%n", e);
+			}
 		}
 	}
 

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- 
     WSDL contract for Binas service.
 
@@ -41,6 +40,7 @@
                     <xs:element name="credit" type="xs:int" minOccurs="0" />
                 </xs:sequence>
             </xs:complexType>
+            
 
 
             <xs:complexType name="listStations">

@@ -1,5 +1,19 @@
 package org.binas.ws.cli;
 
+import java.util.List;
+
+import org.binas.ws.BadInit_Exception;
+import org.binas.ws.CoordinatesView;
+import org.binas.ws.InvalidStation_Exception;
+import org.binas.ws.StationView;
+import org.binas.ws.UserNotExists_Exception;
+
+/**
+ * Class that contains the main of the BinasClient
+ * 
+ * Looks for Binas using arguments that come from pom.xm
+ *
+ */
 public class BinasClientApp {
 
     public static void main(String[] args) throws Exception {
@@ -20,8 +34,6 @@ public class BinasClientApp {
             wsName = args[1];
         }
 
-		System.out.println(BinasClientApp.class.getSimpleName() + " running");
-
         // Create client
         BinasClient client = null;
 
@@ -37,9 +49,9 @@ public class BinasClientApp {
         // the following remote invocations are just basic examples
         // the actual tests are made using JUnit
 
-		System.out.println("Invoke ping()...");
-		String result = client.testPing("client");
-		System.out.print(result);
+        System.out.println("Invoke ping()...");
+        String result = client.testPing("client");
+        System.out.print(result);
         
 	 }
 }
