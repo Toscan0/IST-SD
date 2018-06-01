@@ -7,6 +7,7 @@ import org.binas.ws.CoordinatesView;
 import org.binas.ws.InvalidStation_Exception;
 import org.binas.ws.StationView;
 import org.binas.ws.UserNotExists_Exception;
+import org.binas.ws.UserView;
 
 /**
  * Class that contains the main of the BinasClient
@@ -51,6 +52,7 @@ public class BinasClientApp {
 
         System.out.println("Invoke ping()...");
         String result = client.testPing("client");
+        //UserView result = client.activateUser("alice@A30.binas.org");
         System.out.print(result);
         
 	 }

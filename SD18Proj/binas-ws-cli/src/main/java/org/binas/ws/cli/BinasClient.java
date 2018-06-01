@@ -4,15 +4,9 @@ import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
-import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.BindingProvider;
-import javax.xml.ws.Response;
 
-import org.binas.ws.TestInitResponse;
-import org.binas.ws.ActivateUserResponse;
 import org.binas.ws.AlreadyHasBina_Exception;
 import org.binas.ws.BadInit_Exception;
 import org.binas.ws.BinasPortType;
@@ -20,20 +14,12 @@ import org.binas.ws.BinasService;
 import org.binas.ws.CoordinatesView;
 import org.binas.ws.EmailExists_Exception;
 import org.binas.ws.FullStation_Exception;
-import org.binas.ws.GetCreditResponse;
-import org.binas.ws.GetInfoStationResponse;
 import org.binas.ws.InvalidEmail_Exception;
 import org.binas.ws.InvalidStation_Exception;
-import org.binas.ws.ListStationsResponse;
 import org.binas.ws.NoBinaAvail_Exception;
 import org.binas.ws.NoBinaRented_Exception;
 import org.binas.ws.NoCredit_Exception;
-import org.binas.ws.RentBinaResponse;
-import org.binas.ws.ReturnBinaResponse;
 import org.binas.ws.StationView;
-import org.binas.ws.TestClearResponse;
-import org.binas.ws.TestInitStationResponse;
-import org.binas.ws.TestPingResponse;
 import org.binas.ws.UserNotExists_Exception;
 import org.binas.ws.UserView;
 
@@ -48,9 +34,6 @@ import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
  */
 public class BinasClient implements BinasPortType {
 
-	
-	
-	
     /** WS service */
     BinasService service = null;
 
@@ -137,7 +120,6 @@ public class BinasClient implements BinasPortType {
         }
     }
 
-    
 	@Override
 	public UserView activateUser(String email) throws EmailExists_Exception, InvalidEmail_Exception {
 		return port.activateUser(email);
@@ -156,7 +138,6 @@ public class BinasClient implements BinasPortType {
 	@Override
 	public void rentBina(String stationId, String email) throws AlreadyHasBina_Exception, InvalidStation_Exception,
 			NoBinaAvail_Exception, NoCredit_Exception, UserNotExists_Exception {
-		
 		port.rentBina(stationId,email);
 	}
 
@@ -166,8 +147,6 @@ public class BinasClient implements BinasPortType {
 		port.returnBina(stationId,email);
 	}
 
-
-	
 	@Override
 	public int getCredit(String email) throws UserNotExists_Exception {
 		return port.getCredit(email);
@@ -188,115 +167,9 @@ public class BinasClient implements BinasPortType {
 			throws BadInit_Exception {
 		port.testInitStation(stationId, x, y, capacity, returnPrize);
 	}
-	
-	@Override
-	public Response<TestInitStationResponse>  testInitStationAsync(String stationId, int x, int y, int capacity, int returnPrize) {
-		return port.testInitStationAsync(stationId, x, y, capacity, returnPrize);
-	}
-	
-	@Override
-	public Future<?> testInitStationAsync(String stationId, int x, int y, int capacity, int returnPrize,AsyncHandler<TestInitStationResponse> asyncHandler) {
-		return port.testInitStationAsync(stationId, x, y, capacity, returnPrize, asyncHandler);
-	}
 
 	@Override
 	public void testInit(int userInitialPoints) throws BadInit_Exception {
 		port.testInit(userInitialPoints);
 	}
-	
-	@Override
-	public Response<TestInitResponse> testInitAsync(int userInitialPoints) {
-		return port.testInitAsync(userInitialPoints);
-	}
-	
-	@Override
-	public Future<?> testInitAsync(int userInitialPoints,AsyncHandler<TestInitResponse> asyncHandler) {
-		return port.testInitAsync(userInitialPoints, asyncHandler);
-	}
-
-	@Override
-	public Response<ListStationsResponse> listStationsAsync(Integer numberOfStations, CoordinatesView coordinates) {
-		return port.listStationsAsync(numberOfStations,coordinates);
-	}
-
-	@Override
-	public Future<?> listStationsAsync(Integer numberOfStations, CoordinatesView coordinates,
-			AsyncHandler<ListStationsResponse> asyncHandler) {
-		return port.listStationsAsync(numberOfStations,coordinates);
-	}
-
-	@Override
-	public Response<GetInfoStationResponse> getInfoStationAsync(String stationId) {
-		return port.getInfoStationAsync(stationId);
-	}
-
-	@Override
-	public Future<?> getInfoStationAsync(String stationId, AsyncHandler<GetInfoStationResponse> asyncHandler) {
-		return port.getInfoStationAsync(stationId, asyncHandler);
-	}
-
-	@Override
-	public Response<GetCreditResponse> getCreditAsync(String email) {
-		return port.getCreditAsync(email);
-	}
-
-	@Override
-	public Future<?> getCreditAsync(String email, AsyncHandler<GetCreditResponse> asyncHandler) {
-		return port.getCreditAsync(email, asyncHandler);
-	}
-
-	@Override
-	public Response<ActivateUserResponse> activateUserAsync(String email) {
-		return port.activateUserAsync(email);
-	}
-
-	@Override
-	public Future<?> activateUserAsync(String email, AsyncHandler<ActivateUserResponse> asyncHandler) {
-		return port.activateUserAsync(email, asyncHandler);
-	}
-
-	@Override
-	public Response<RentBinaResponse> rentBinaAsync(String stationId, String email) {
-		return port.rentBinaAsync(stationId, email);
-	}
-
-	@Override
-	public Future<?> rentBinaAsync(String stationId, String email, AsyncHandler<RentBinaResponse> asyncHandler) {
-		return port.rentBinaAsync(stationId, email, asyncHandler);
-	}
-
-	@Override
-	public Response<ReturnBinaResponse> returnBinaAsync(String stationId, String email) {
-		return port.returnBinaAsync(stationId, email);
-	}
-
-	@Override
-	public Future<?> returnBinaAsync(String stationId, String email, AsyncHandler<ReturnBinaResponse> asyncHandler) {
-		return port.returnBinaAsync(stationId, email, asyncHandler);
-	}
-
-	@Override
-	public Response<TestPingResponse> testPingAsync(String inputMessage) {
-		return port.testPingAsync(inputMessage);
-	}
-
-	@Override
-	public Future<?> testPingAsync(String inputMessage, AsyncHandler<TestPingResponse> asyncHandler) {
-		return port.testPingAsync(inputMessage, asyncHandler);
-	}
-
-	@Override
-	public Response<TestClearResponse> testClearAsync() {
-		return port.testClearAsync();
-	}
-
-	@Override
-	public Future<?> testClearAsync(AsyncHandler<TestClearResponse> asyncHandler) {
-		return port.testClearAsync(asyncHandler);
-	}
-	
-	
-
-	
-
 }   

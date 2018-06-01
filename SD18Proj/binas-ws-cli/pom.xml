@@ -59,6 +59,13 @@
             <version>1.0-SNAPSHOT</version>
             <scope>test</scope>
 	    </dependency>
+	    
+	     <!--  ws-handler -->
+        <dependency>
+  		 	<groupId>handlers.A30</groupId>
+   			<artifactId>ws-handlers</artifactId>
+   			<version>1.1-SNAPSHOT</version>
+  		 </dependency>
 	</dependencies>
 	<build>
 		<resources>

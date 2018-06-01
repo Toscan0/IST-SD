@@ -50,6 +50,13 @@
 	            <artifactId>station-ws-cli</artifactId>
 	            <version>1.0-SNAPSHOT</version>
 	        </dependency>
+	        
+	        <!--  ws-handler -->
+	        <dependency>
+   		 		<groupId>handlers.A30</groupId>
+    			<artifactId>ws-handlers</artifactId>
+    			<version>1.1-SNAPSHOT</version>
+   		 	</dependency>
 	    </dependencies>
 
 	<build>

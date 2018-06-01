@@ -1,26 +1,19 @@
 package org.binas.station.ws;
 
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import javax.jws.WebService;
-import javax.xml.registry.infomodel.User;
 
-import org.binas.station.domain.Balance;
 import org.binas.station.domain.Coordinates;
 import org.binas.station.domain.Station;
 import org.binas.station.domain.exception.BadInitException;
 import org.binas.station.domain.exception.NoBinaAvailException;
 import org.binas.station.domain.exception.NoSlotAvailException;
-import org.binas.station.domain.exception.UserNotFoundException;
 
 /**
  * This class implements the Web Service port type (interface). The annotations
  * below "map" the Java class to the WSDL definitions.
  */
 @WebService(endpointInterface = "org.binas.station.ws.StationPortType",
-            wsdlLocation = "station.2_0.wsdl",
+            wsdlLocation = "station.wsdl",
             name ="StationWebService",
             portName = "StationPort",
             targetNamespace="http://ws.station.binas.org/",
@@ -75,21 +68,6 @@ public class StationPortImpl implements StationPortType {
 		} catch (NoBinaAvailException e) {
 			throwNoBinaAvail("No Bina available at this station!");
 		}
-	}
-
-	
-	@Override
-	public BalanceView getBalance(String userEmail) throws UserNotFound_Exception {
-		Station station = Station.getInstance();
-		//synchronized(station) {
-			try {
-				Balance balance = station.getUserFromMaps(userEmail);
-				return  buildBalanceView(balance);
-			} catch (UserNotFoundException e) {
-				throwUserNotFound("No user found with that email at this station!");
-			}
-			return null;			
-		//}
 	}
 
 
@@ -152,18 +130,6 @@ public class StationPortImpl implements StationPortType {
 		view.setY(coordinates.getY());
 		return view;
 	}
-
-	/** Helper to convert a domain balance to a view. */
-	private BalanceView buildBalanceView(Balance balance) {
-		BalanceView view = new BalanceView();
-		//System.out.println("balance");
-		//System.out.println(balance.getBalance().get());
-		//System.out.println("tag");
-		//System.out.println(balance.getTag().get());
-		view.setBalance(balance.getBalance().get());
-		view.setTag(balance.getTag().get());
-		return view;
-	}
 	
 	// Exception helpers -----------------------------------------------------
 
@@ -187,32 +153,5 @@ public class StationPortImpl implements StationPortType {
 		faultInfo.message = message;
 		throw new BadInit_Exception(message, faultInfo);
 	}
-	
-	/** Helper to throw a new UserNotFound exception. */
-	private void throwUserNotFound(final String message) throws UserNotFound_Exception {
-		UserNotFound faultInfo = new UserNotFound();
-		faultInfo.message = message;
-		throw new UserNotFound_Exception(message, faultInfo);
-	}
-	
-	
-	/**set a new balance. */
-	@Override
-	public void setBalance(String userEmail, int newBalance, int tag) {
-		Station station = Station.getInstance();
 
-		Balance balanceInfo = station.getBalancesMap().get(userEmail);
-		
-		//Caso não exista registo
-		if (balanceInfo == null){
-			balanceInfo = new Balance (new AtomicInteger(newBalance), new AtomicInteger(0));
-			station.getBalancesMap().put(userEmail, balanceInfo);
-		}
-		
-		
-		station.getBalancesMap().get(userEmail).setBalance(new AtomicInteger(newBalance));
-		
-		station.getBalancesMap().get(userEmail).setTag(new AtomicInteger(tag));
-	
-	}
 }

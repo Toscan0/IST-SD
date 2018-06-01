@@ -2,7 +2,6 @@ package org.binas.ws.it;
 
 import static org.junit.Assert.*;
 
-import org.binas.station.ws.UserNotFound_Exception;
 import org.binas.ws.*;
 import org.junit.*;
 
@@ -35,21 +34,21 @@ public class ActivateUserIT extends BaseIT  {
 	}
 
 	@Test
-	public void createUserValidTest() throws EmailExists_Exception, InvalidEmail_Exception, UserNotExists_Exception, UserNotFound_Exception{
+	public void createUserValidTest() throws EmailExists_Exception, InvalidEmail_Exception, UserNotExists_Exception{
 		client.activateUser(VALID_USER);
 		assertEquals(USER_POINTS, client.getCredit(VALID_USER));
 	}
 		 
 	@Test
 	public void createUserValidTest2() throws EmailExists_Exception, InvalidEmail_Exception, UserNotExists_Exception {
-		String email = new String("sd.teste@tecnico");
+		String email = new String("alice@A30.binas.org");
 		client.activateUser(email);
 		assertEquals(USER_POINTS, client.getCredit(email));
 	}
 	
 	@Test
 	public void createUserValidTest3() throws EmailExists_Exception, InvalidEmail_Exception, UserNotExists_Exception {
-		String email = new String("sd@tecnico");
+		String email = new String("alice@A30.binas.org");
 		client.activateUser(email);
 		assertEquals(USER_POINTS, client.getCredit(email));
 	}
@@ -68,7 +67,7 @@ public class ActivateUserIT extends BaseIT  {
 	 * Tries to create a user with an invalid email
 	 * Should throw InvalidEmail_Exception
 	 */
-	@Test(expected = InvalidEmail_Exception.class)
+	@Test(expected = javax.xml.ws.WebServiceException.class)
 	public void createUserInvalidEmailTest1() throws EmailExists_Exception, InvalidEmail_Exception {
 		String email = new String("@tecnico.ulisboa");
 		client.activateUser(email);			
@@ -78,7 +77,7 @@ public class ActivateUserIT extends BaseIT  {
 	 * Tries to create a user with an invalid email
 	 * Should throw InvalidEmail_Exception
 	 */
-	@Test(expected = InvalidEmail_Exception.class)
+	@Test(expected = javax.xml.ws.WebServiceException.class)
 	public void createUserInvalidEmailTest2() throws EmailExists_Exception, InvalidEmail_Exception {
 		String email = new String("teste");
 		client.activateUser(email);			
@@ -89,7 +88,7 @@ public class ActivateUserIT extends BaseIT  {
 	 * Tries to create a user with an invalid email
 	 * Should throw InvalidEmail_Exception
 	 */
-	@Test(expected = InvalidEmail_Exception.class)
+	@Test(expected = javax.xml.ws.WebServiceException.class)
 	public void createUserInvalidEmailTest3() throws EmailExists_Exception, InvalidEmail_Exception {
 		String email = new String("teste@tecnico.");
 		client.activateUser(email);			
@@ -100,13 +99,13 @@ public class ActivateUserIT extends BaseIT  {
 	 * Tries to create a user with an invalid email
 	 * Should throw InvalidEmail_Exception
 	 */
-	@Test(expected = InvalidEmail_Exception.class)
+	@Test(expected = javax.xml.ws.WebServiceException.class)
 	public void createUserInvalidEmailTest4() throws EmailExists_Exception, InvalidEmail_Exception {
 		String email = new String("sd.@tecnico");
 		client.activateUser(email);			
 	}
 	
-	@Test(expected = InvalidEmail_Exception.class)
+	@Test(expected = javax.xml.ws.WebServiceException.class)
 	public void createUserInvalidEmailTest5() throws EmailExists_Exception, InvalidEmail_Exception {
 		client.activateUser(null);			
 	}

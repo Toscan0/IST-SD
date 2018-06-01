@@ -40,7 +40,6 @@
                     <xs:element name="credit" type="xs:int" minOccurs="0" />
                 </xs:sequence>
             </xs:complexType>
-            
 
 
             <xs:complexType name="listStations">

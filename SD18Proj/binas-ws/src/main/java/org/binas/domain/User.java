@@ -18,7 +18,6 @@ public class User {
 	private String email;
 	private AtomicInteger balance;
 	private AtomicBoolean hasBina = new AtomicBoolean(false);
-	private AtomicInteger tag = new AtomicInteger(1); //sequence number in tag
 	
 	public User(String email, int initialBalance) {
 		this.email = email;
@@ -45,10 +44,7 @@ public class User {
 	public boolean getHasBina() {
 		return hasBina.get();
 	}
-
-	public void setHasBina(AtomicBoolean hasBina) {
-		this.hasBina = hasBina;
-	}
+	
 
 	public int getCredit() {
 		return balance.get();
@@ -70,25 +66,16 @@ public class User {
 	}
 
 	public synchronized void effectiveRent() throws InsufficientCreditsException {
-		//decrementBalance();
+		decrementBalance();
 		hasBina.set(true);
 	}
-
 
 	public synchronized void effectiveReturn(int prize) throws UserHasNoBinaException {
 		if( ! getHasBina()) {
 			throw new UserHasNoBinaException();
 		}
 		hasBina.set(false);
-		//incrementBalance(prize);
-	}
-
-	public AtomicInteger getTag() {
-		return tag;
-	}
-
-	public void setTag(AtomicInteger tag) {
-		this.tag = tag;
+		incrementBalance(prize);
 	}
 
 

@@ -36,8 +36,6 @@ public class UsersManager {
 	public static int DEFAULT_INITIAL_BALANCE = 10;
 	public AtomicInteger initialBalance = new AtomicInteger(DEFAULT_INITIAL_BALANCE);
 	
-	
-
 	/**
 	 * Map of existing users <email, User>. Uses concurrent hash table
 	 * implementation supporting full concurrency of retrievals and high
@@ -65,7 +63,7 @@ public class UsersManager {
 			throw new UserAlreadyExistsException();
 			
 		} catch (UserNotFoundException e) {
-			User user = new User(email, 10);
+			User user = new User(email,initialBalance.get());
 			registeredUsers.put(email, user);
 			return user;
 		}

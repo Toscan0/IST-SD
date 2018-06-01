@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<handler-chains xmlns="http://java.sun.com/xml/ns/javaee">
+	<!-- 
+		 A handler chain defines which handlers are called.
+		 
+	     The handlers are called in the order of declaration for outbound messages, and 
+	     in the reverse order for inbound messages.
+	     
+	     Individual handlers can be commented/uncommented to exclude/include them in the chain.
+	     
+	     Additional handlers can be added.
+	     
+	     The same handler can be specified multiple times, for example,
+	     to log the message at the beginning and at the end of the chain.
+	-->
+    <handler-chain> 
+    
+    	<handler>
+            <handler-class>handlers.ws.handler.PrettyLogHandler</handler-class>
+        </handler>
+         
+         <!--     	MAC handler -->
+        <handler>
+            <handler-class>handlers.ws.handler.MACHandler</handler-class>
+        </handler>
+        
+        <!--  Este handler serve para a demonstracao de resultados
+        	Ele ira propositadamente alterar o SOAP context para o MAC verify dar erro
+         	Descomente para testar
+         -->
+        <handler>
+            <handler-class>handlers.ws.handler.AtackHandler</handler-class>
+        </handler>
+    	 
+    	 
+<!--     	BinasAuthorization handler -->
+        <handler>
+            <handler-class>handlers.ws.handler.BinasAuthorizationHandler</handler-class>
+        </handler>
+        
+		<!--
+			The kerber handler server side 
+		 -->
+        <handler>
+            <handler-class>handlers.ws.handler.KerberosServerHandler</handler-class>
+        </handler>
+                 
+		<!-- 
+		    Print the message context properties (scope,key,value)
+		    that are made available by the JAX-WS runtime to the handlers.
+		-->
+<!--         <handler> -->
+<!--             <handler-class>handlers.ws.handler.MessageContextHandler</handler-class> -->
+<!--         </handler> -->
+
+		<!-- 
+		    Print the endpoint address.
+		
+		<handler>
+			<handler-class>handlers.ws.handler.EndpointAddressHandler</handler-class>
+		</handler>
+		-->
+		<!-- 
+		    Print the SOAP message direction and contents. 
+		
+        <handler>
+            <handler-class>handlers.ws.handler.LogHandler</handler-class>
+        </handler>
+		-->
+        <!-- 
+            Print the SOAP message with added indentation for easier reading.
+        -->
+        <handler>
+            <handler-class>handlers.ws.handler.PrettyLogHandler</handler-class>
+        </handler>
+    </handler-chain>
+</handler-chains>

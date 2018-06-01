@@ -65,7 +65,8 @@ public class ReturnBinaIT extends BaseIT {
 		 
 		 
 
-	@Test(expected = NoBinaRented_Exception.class)
+
+	@Test(expected = javax.xml.ws.WebServiceException.class)
 	public void returnBinaNoBinaRentedTest() throws FullStation_Exception, InvalidStation_Exception, NoBinaRented_Exception, UserNotExists_Exception, EmailExists_Exception, InvalidEmail_Exception, AlreadyHasBina_Exception, NoBinaAvail_Exception, NoCredit_Exception   {
 		final String USER_2 = "sd.teste2@tecnico.ulisboa";
 		client.activateUser(USER_2);
@@ -77,7 +78,8 @@ public class ReturnBinaIT extends BaseIT {
 		 
 		 
 
-	@Test(expected = UserNotExists_Exception.class)
+
+	@Test(expected = javax.xml.ws.WebServiceException.class)
 	public void returnBinaUserNotExistsTest() throws FullStation_Exception, InvalidStation_Exception, NoBinaRented_Exception, UserNotExists_Exception, EmailExists_Exception, InvalidEmail_Exception, AlreadyHasBina_Exception, NoBinaAvail_Exception, NoCredit_Exception   {
 		final String USER_2 = "sd.teste2@tecnico.ulisboa";
 		final String USER_3 = "sd.teste3@tecnico.ulisboa";
@@ -93,7 +95,7 @@ public class ReturnBinaIT extends BaseIT {
 		 	 
 
 
-	@Test(expected = FullStation_Exception.class)
+	@Test(expected = org.binas.ws.FullStation_Exception.class)
 	public void returnBinaNoSlotAvailTest() throws BadInit_Exception, AlreadyHasBina_Exception, InvalidStation_Exception, NoBinaAvail_Exception, NoCredit_Exception, UserNotExists_Exception, FullStation_Exception, NoBinaRented_Exception {
 		final String STATION_2 = stationBaseName + "2";
 		client.testInitStation(STATION_2, /*x*/5, /*y*/5, /*capacity*/20, /*reward*/STATION_REWARD);

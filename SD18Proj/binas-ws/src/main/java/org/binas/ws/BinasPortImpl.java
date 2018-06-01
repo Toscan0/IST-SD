@@ -6,11 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.jws.HandlerChain;
 import javax.jws.WebService;
-import javax.xml.ws.Response;
 
 import org.binas.domain.BinasManager;
 import org.binas.domain.StationsComparator;
@@ -24,17 +22,13 @@ import org.binas.domain.exception.UserAlreadyExistsException;
 import org.binas.domain.exception.UserAlreadyHasBinaException;
 import org.binas.domain.exception.UserHasNoBinaException;
 import org.binas.domain.exception.UserNotFoundException;
-import org.binas.station.ws.BalanceView;
-import org.binas.station.ws.GetBalanceResponse;
 import org.binas.station.ws.NoSlotAvail_Exception;
-import org.binas.station.ws.UserNotFound_Exception;
 import org.binas.station.ws.cli.StationClient;
 
 import org.binas.station.ws.cli.StationClientException;
 
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINamingException;
-import pt.ulisboa.tecnico.sdis.ws.uddi.UDDIRecord;
 
 @WebService(
 		endpointInterface = "org.binas.ws.BinasPortType",
@@ -44,6 +38,7 @@ import pt.ulisboa.tecnico.sdis.ws.uddi.UDDIRecord;
         targetNamespace="http://ws.binas.org/",
         serviceName = "BinasService"
 )
+@HandlerChain(file = "/binas-ws_handler-chain.xml")
 public class BinasPortImpl implements BinasPortType {
 	
 	// end point manager
@@ -53,32 +48,22 @@ public class BinasPortImpl implements BinasPortType {
 		this.endpointManager = endpointManager;
 	}
 
-	
 	@Override
 	public UserView activateUser(String email) throws InvalidEmail_Exception, EmailExists_Exception {
-		int balance = 0;
 		try {
-			//Cria um User
 			User user = BinasManager.getInstance().createUser(email);
-			
-			balance = BinasManager.getInstance().auxGetBalance(email);
-			BinasManager.getInstance().balanceError(balance);
 			
 			//Create and populate userView
 			UserView userView = new UserView();
 			userView.setEmail(user.getEmail());
 			userView.setCredit(user.getCredit());
 			userView.setHasBina(user.getHasBina());
-			
 			return userView;
-			
-		} 
-		catch (UserAlreadyExistsException e) {
+		} catch (UserAlreadyExistsException e) {
 			throwEmailExists("Email already exists: " + email);
 		} catch (InvalidEmailException e) {
 			throwInvalidEmail("Invalid email: " + email);
-		} 
-		
+		}
 		return null;
 	}
 
@@ -164,11 +149,13 @@ public class BinasPortImpl implements BinasPortType {
 
 	@Override
 	public int getCredit(String email) throws UserNotExists_Exception {
-		int balance;
-		
-		balance = BinasManager.getInstance().auxGetBalance(email);
-		
-		return balance;		
+		try {
+			User user = BinasManager.getInstance().getUser(email);	
+			return user.getCredit();
+		} catch (UserNotFoundException e) {
+			throwUserNotExists("User not found: " + email);
+		}
+		return 0;
 	}
 	
 	// Auxiliary operations --------------------------------------------------
@@ -184,7 +171,6 @@ public class BinasPortImpl implements BinasPortType {
 		sb.append(inputMessage);
 		sb.append(" from ");
 		sb.append(endpointManager.getWsName());
-	
 		sb.append("!");
 		sb.append(EOL);
 		
@@ -192,7 +178,6 @@ public class BinasPortImpl implements BinasPortType {
 		try {
 			UDDINaming uddiNaming = endpointManager.getUddiNaming();
 			stationUrls = uddiNaming.list(BinasManager.getInstance().getStationTemplateName() + "%");
- 		
 			sb.append("Found ");
 			sb.append(stationUrls.size());
 			sb.append(" stations on UDDI.");
@@ -273,14 +258,7 @@ public class BinasPortImpl implements BinasPortType {
 	
 	
 	// View helpers ----------------------------------------------------------
-	public BalanceView converter(org.binas.station.ws.BalanceView balance) {
-		BalanceView newBalance = new BalanceView ();
-		newBalance.setBalance(balance.getBalance());
-		newBalance.setTag(balance.getTag());
-		return newBalance;
-		
-	}
-
+	
 	private StationView newStationView(org.binas.station.ws.StationView sv) {
 		StationView retSv = new StationView();
 		CoordinatesView coordinates = new CoordinatesView();

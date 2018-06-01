@@ -28,7 +28,7 @@ public class BaseIT {
 	protected static BinasClient client;
 	protected static String stationBaseName;
 	protected static String binasClearStations;
-	protected static final String VALID_USER = "sd.test@tecnico.ulisboa";
+	protected static final String VALID_USER = "alice@A30.binas.org";
 
 	private static String uddiURL;
 	
